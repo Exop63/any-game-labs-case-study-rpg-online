@@ -21,7 +21,6 @@ public class AnimationsTest : MonoBehaviour
     {
         AnimationClip clip = animations[index];
         animator.Play(clip.name);
-        Debug.Log(index);
         yield return new WaitForSeconds(clip.length);
         index++;
         if (index == animations.Length) index = 0;
