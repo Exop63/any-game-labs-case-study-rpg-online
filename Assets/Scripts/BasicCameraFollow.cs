@@ -15,8 +15,7 @@ public class BasicCameraFollow : Singleton<BasicCameraFollow>
     void Update()
     {
         if (target == null) return;
-        var newPos = Vector3.Lerp(transform.position, target.transform.position + offset, 0.8f);
-
+        var newPos = target.transform.position + offset;
         transform.position = newPos;
         transform.LookAt(target);
     }
