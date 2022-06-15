@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Extensions;
+using UnityEngine;
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
 using UnityEngine.InputSystem;
 #endif
@@ -110,6 +111,8 @@ namespace StarterAssets
         private const float _threshold = 0.01f;
 
         private bool _hasAnimator;
+        private bool isAttacking;
+        private bool lockMove;
 
         private bool IsCurrentDeviceMouse
         {
@@ -225,7 +228,7 @@ namespace StarterAssets
 
             // note: Vector2's == operator uses approximation so is not floating point error prone, and is cheaper than magnitude
             // if there is no input, set the target speed to 0
-            if (_input.move == Vector2.zero) targetSpeed = 0.0f;
+            if (_input.move == Vector2.zero || isAttacking || lockMove) targetSpeed = 0.0f;
 
             // a reference to the players current horizontal velocity
             float currentHorizontalSpeed = new Vector3(_controller.velocity.x, 0.0f, _controller.velocity.z).magnitude;
@@ -285,19 +288,26 @@ namespace StarterAssets
         }
         private void Attack()
         {
+            _input.attack = lockMove ? false : _input.attack;
             if (_input.attack)
             {
+                _input.attack = false;
                 // update animator if using character
                 if (_hasAnimator)
                 {
-                    _animator.SetBool(_animIDAttack, true);
+                    _animator.SetTrigger(_animIDAttack);
+                    var time = _animator.GetCurrentAnimatorClipInfo(0).Length;
+                    LockMove(time);
+
                 }
             }
         }
 
+
         private void JumpAndGravity()
         {
-            if (Grounded)
+
+            if (Grounded && !lockMove)
             {
                 // reset the fall timeout timer
                 _fallTimeoutDelta = FallTimeout;
@@ -334,7 +344,7 @@ namespace StarterAssets
                     _jumpTimeoutDelta -= Time.deltaTime;
                 }
             }
-            else
+            else if (!lockMove)
             {
                 // reset the jump timeout timer
                 _jumpTimeoutDelta = JumpTimeout;
@@ -404,5 +414,16 @@ namespace StarterAssets
                 AudioSource.PlayClipAtPoint(LandingAudioClip, transform.TransformPoint(_controller.center), FootstepAudioVolume);
             }
         }
+
+        public void LockMove(float time)
+        {
+            lockMove = true;
+            EventSystem.Instance.WaitAndDo(_animator.GetCurrentAnimatorClipInfo(0).Length, () =>
+                               {
+                                   lockMove = false;
+                               });
+        }
     }
+
+
 }
