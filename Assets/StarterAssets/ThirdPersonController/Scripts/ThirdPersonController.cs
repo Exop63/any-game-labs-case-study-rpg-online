@@ -95,6 +95,7 @@ namespace StarterAssets
         private int _animIDSpeed;
         private int _animIDGrounded;
         private int _animIDJump;
+        private int _animIDAttack;
         private int _animIDFreeFall;
         private int _animIDMotionSpeed;
 
@@ -135,7 +136,7 @@ namespace StarterAssets
         private void Start()
         {
             _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
-            
+
             _hasAnimator = TryGetComponent(out _animator);
             _controller = GetComponent<CharacterController>();
             _input = GetComponent<StarterAssetsInputs>();
@@ -156,10 +157,13 @@ namespace StarterAssets
         {
             _hasAnimator = TryGetComponent(out _animator);
 
+            Attack();
             JumpAndGravity();
             GroundedCheck();
             Move();
         }
+
+
 
         private void LateUpdate()
         {
@@ -171,6 +175,7 @@ namespace StarterAssets
             _animIDSpeed = Animator.StringToHash("Speed");
             _animIDGrounded = Animator.StringToHash("Grounded");
             _animIDJump = Animator.StringToHash("Jump");
+            _animIDAttack = Animator.StringToHash("Attack");
             _animIDFreeFall = Animator.StringToHash("FreeFall");
             _animIDMotionSpeed = Animator.StringToHash("MotionSpeed");
         }
@@ -276,6 +281,17 @@ namespace StarterAssets
             {
                 _animator.SetFloat(_animIDSpeed, _animationBlend);
                 _animator.SetFloat(_animIDMotionSpeed, inputMagnitude);
+            }
+        }
+        private void Attack()
+        {
+            if (_input.attack)
+            {
+                // update animator if using character
+                if (_hasAnimator)
+                {
+                    _animator.SetBool(_animIDAttack, true);
+                }
             }
         }
 
