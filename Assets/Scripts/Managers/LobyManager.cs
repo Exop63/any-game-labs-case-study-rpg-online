@@ -81,6 +81,11 @@ public class LobyManager : MonoBehaviourPunCallbacks
     }
     internal void LoadGame()
     {
+        if (!PhotonNetwork.IsMasterClient)
+        {
+            Debug.LogError("PhotonNetwork : Trying to Load a level but we are not the master Client");
+            return;
+        }
         PhotonNetwork.LoadLevel(gameScene);
     }
     #endregion
