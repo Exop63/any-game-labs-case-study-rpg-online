@@ -30,7 +30,7 @@ namespace Extensions
             foreach (Transform item in g)
             {
 
-                Debug.Log("item: " + item.name);
+                // Debug.Log("item: " + item.name);
                 if (item.name == name)
                 {
                     return item;

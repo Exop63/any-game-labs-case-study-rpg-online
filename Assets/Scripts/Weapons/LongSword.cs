@@ -9,6 +9,7 @@ public class LongSword : Sword, IMeleeWeapon
 
     // time for openning collider.
     public float attckTime = 1;
+    public float delay = 0.4f;
 
     // Damage value
     public int Damage
@@ -44,9 +45,13 @@ public class LongSword : Sword, IMeleeWeapon
     }
     public override void Attacking()
     {
-        m_Collider.enabled = true;
         hitCharacters = new Dictionary<int, Character>();
+        EventSystem.Instance.WaitAndDo(delay, StartAttack);
         EventSystem.Instance.WaitAndDo(attckTime, EndAttack);
+    }
+    private void StartAttack()
+    {
+        m_Collider.enabled = true;
     }
 
     private void EndAttack()

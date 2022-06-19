@@ -9,21 +9,17 @@ using UnityEngine;
 
 public abstract class Character : MonoBehaviour
 {
-    public int Id => m_id;
-    public int Armor { get; set; }
-    public int Life { get; set; }
-    public Sword EquiptedWeapon => _equiptedWeapon;
-    public Health health = new Health();
 
+    #region Assignments
+
+    public int Id => m_id;
 
     protected Transform playerCamaeraRoot;
 
-    internal PhotonView photonView;
     protected ThirdPersonController thirdPersonController;
 
-    protected bool isMine;
-    protected Animator _animator;
-    protected bool _hasAnimator;
+    public Sword EquiptedWeapon => _equiptedWeapon;
+
 
     protected StarterAssetsInputs _input;
 
@@ -33,6 +29,30 @@ public abstract class Character : MonoBehaviour
 
     [SerializeField] private int m_id;
 
+    #endregion
+
+    #region Status Variables
+    public int Armor { get; set; }
+    public int Life { get; set; }
+    public Health health = new Health();
+    public CharacterActions Action => action;
+
+    private CharacterActions action;
+
+    #endregion
+
+    #region Animation Variables
+    protected Animator _animator;
+    protected bool _hasAnimator;
+
+    #endregion
+
+    #region  Network Variables
+
+    internal PhotonView photonView;
+    protected bool isMine;
+
+    #endregion
 
 
     #region MonoBeahviourCallBacks
@@ -64,7 +84,6 @@ public abstract class Character : MonoBehaviour
         SetupStatus();
         SetupPublicUI();
 
-
         if (!isMine) return; // setup input for online character
         SetupPlayerCamara();
 
@@ -74,6 +93,7 @@ public abstract class Character : MonoBehaviour
     private void SetupStatus()
     {
         health = new Health();
+        action = CharacterActions.Idle;
     }
 
     private void SetupAsiggments()
@@ -155,25 +175,74 @@ public abstract class Character : MonoBehaviour
                                thirdPersonController.lockMove = false;
                            });
     }
-    public bool CanDamage(Sword weapon)
+
+    /// </summary>
+    /// Check the weapon can damage to me
+    /// <param name="weapon"> The weapon </param>
+    /// <summary>
+    public bool CanDamage(IDamagabele weapon)
     {
-        Debug.Log($"CanDamage Id: {Id} wepon character id: {weapon.Owner.Id}");
-        return Id != weapon.Owner.Id;
-    }
-    [PunRPC]
-    internal void ChangeHealth(float value)
-    {
-        health.CurrentHealth = value;
+        return Id != weapon.Owner.Id && action != CharacterActions.Dead;
     }
 
+
+
+
+    #endregion
+    #region  RPCs
+    /// </summary>
+    /// Change health of character
+    /// <param name="value"> amount of health </param>
+    /// <summary>
+    [PunRPC]
+    public void ChangeHealth(float value)
+    {
+        health.CurrentHealth = value;
+        // Player is die
+        if (health.CurrentHealth <= 0)
+        {
+            photonView.RPC("Death", RpcTarget.All);
+        }
+    }
+    /// </summary>
+    /// Change the unique id of the user
+    /// <param name="id"> new id value </param>
+    /// <summary>
     [PunRPC]
     public void SetId(int id)
     {
         m_id = id;
     }
 
+    [PunRPC]
+    public void Death()
+    {
+        action = CharacterActions.Dead;
+        _animator.SetTrigger("Death");
+        thirdPersonController.enabled = false;
+        // EventSystem.Instance.WaitAndDo(2, () =>
+        // {
+        //     photonView.RPC("ReSpawn", RpcTarget.All);
+        // });
+
+    }
+    [PunRPC]
+    public void ReSpawn()
+    {
+        Debug.Log("ReSpawn");
+
+        if (isMine)
+        {
+            var newPos = UnityEngine.Random.onUnitSphere * 10;
+            newPos.y = transform.position.y;
+            transform.position = newPos;
+        }
+
+        health = new Health();
+        thirdPersonController.enabled = true;
 
 
+    }
     #endregion
 }
 
