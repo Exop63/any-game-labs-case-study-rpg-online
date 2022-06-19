@@ -35,6 +35,7 @@ public class Inventory : MonoBehaviour
     internal void EquiptItem(string id)
     {
         HUD.Instance.Player.EquipWeapon(id);
+        Toogle();
     }
 
     public void Toogle()

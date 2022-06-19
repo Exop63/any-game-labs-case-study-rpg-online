@@ -253,6 +253,15 @@
                     "processors": "",
                     "interactions": "Press(behavior=1)",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "ToogleHelp",
+                    "type": "Button",
+                    "id": "3f66cdb7-c15f-49e1-9fc8-b67323c6b0a0",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -264,6 +273,17 @@
                     "processors": "",
                     "groups": "KeyboardMouse",
                     "action": "ToogleInventory",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ed277dec-06d6-4324-aebc-f1083151b4b2",
+                    "path": "<Keyboard>/h",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ToogleHelp",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

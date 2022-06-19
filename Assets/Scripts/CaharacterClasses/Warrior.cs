@@ -9,7 +9,7 @@ public class Warrior : Character, ICanAttack
 {
     void Start()
     {
-        EquipWeapon("broad-sword");
+        // EquipWeapon("broad-sword");
     }
 
 
@@ -48,7 +48,7 @@ public class Warrior : Character, ICanAttack
         }
         if (isMine)
         {
-            photonView.RPC("EquipWeapon", RpcTarget.Others, weaponPrefab);
+            photonView.RPC("EquipWeapon", RpcTarget.OthersBuffered, weaponPrefab);
         }
     }
     public override void TakeDamage(int damage)

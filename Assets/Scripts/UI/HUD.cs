@@ -9,7 +9,6 @@ public class HUD : Singleton<HUD>
 
 
 
-
     [Tooltip("Prefab name for Healthbar of Player. Prefab must be in Resources/UI")]
     [SerializeField] private string m_HealthBarPrefabName = "HealthBar";
 
@@ -18,6 +17,7 @@ public class HUD : Singleton<HUD>
 
 
     private Inventory m_Inventory;
+    private Help m_Help;
 
     public void SetHUDPlayer(Character character)
     {
@@ -74,6 +74,18 @@ public class HUD : Singleton<HUD>
     public void ToogleInventory()
     {
         m_Inventory.Toogle();
+    }
+    #endregion
+
+    #region Help
+    internal void SetHelp(Help help)
+    {
+        m_Help = help;
+    }
+    public void ToogleHelp()
+    {
+        var state = !m_Help.gameObject.activeSelf;
+        m_Help.gameObject.SetActive(state);
     }
     #endregion
 }
