@@ -50,6 +50,7 @@ public abstract class Character : MonoBehaviour
     #region  Network Variables
 
     internal PhotonView photonView;
+    internal PhotonTransformView photonTransformView;
     protected bool isMine;
 
     #endregion
@@ -74,6 +75,7 @@ public abstract class Character : MonoBehaviour
     void SetupPlayer()
     {
         photonView = GetComponent<PhotonView>();
+        photonTransformView = GetComponent<PhotonTransformView>();
         if (photonView == null)
         {
             Debug.LogError("Character don't have a PhotonView component");
@@ -86,8 +88,14 @@ public abstract class Character : MonoBehaviour
 
         if (!isMine) return; // setup input for online character
         SetupPlayerCamara();
+        SetupHUD();
 
 
+    }
+
+    private void SetupHUD()
+    {
+        HUD.Instance.SetHUDPlayer(this);
     }
 
     private void SetupStatus()
@@ -151,6 +159,7 @@ public abstract class Character : MonoBehaviour
     /// Change sword
     /// <param name="weaponPrefab"> id of sword. prefab must be located Resources/Weapons/ and the name must be weaponPrefab </param>
     /// <summary>
+    [PunRPC]
     public abstract void EquipWeapon(string weaponPrefab);
 
     /// </summary>
@@ -199,7 +208,7 @@ public abstract class Character : MonoBehaviour
     {
         health.CurrentHealth = value;
         // Player is die
-        if (health.CurrentHealth <= 0)
+        if (health.CurrentHealth <= 0 && action != CharacterActions.Dead)
         {
             photonView.RPC("Death", RpcTarget.All);
         }
@@ -219,30 +228,37 @@ public abstract class Character : MonoBehaviour
     {
         action = CharacterActions.Dead;
         _animator.SetTrigger("Death");
-        thirdPersonController.enabled = false;
-        // EventSystem.Instance.WaitAndDo(2, () =>
-        // {
-        //     photonView.RPC("ReSpawn", RpcTarget.All);
-        // });
 
-    }
-    [PunRPC]
-    public void ReSpawn()
-    {
-        Debug.Log("ReSpawn");
 
         if (isMine)
         {
             var newPos = UnityEngine.Random.onUnitSphere * 10;
             newPos.y = transform.position.y;
             transform.position = newPos;
+            EventSystem.Instance.WaitAndDo(2, () =>
+            {
+                photonView.RPC("ReSpawn", RpcTarget.All, newPos);
+            });
         }
-
-        health = new Health();
-        thirdPersonController.enabled = true;
-
+        HUD.Instance.HidePlayerHud(this);
+        gameObject.SetActive(false);
 
     }
+    [PunRPC]
+    public void ReSpawn(Vector3 spawnPoint)
+    {
+        transform.position = spawnPoint;
+        _animator.SetTrigger("ReSpawn");
+
+        gameObject.SetActive(true);
+        health = new Health();
+        thirdPersonController.enabled = true;
+        action = CharacterActions.Idle;
+        photonTransformView.enabled = true;
+        HUD.Instance.ShowPlayerHud(this);
+
+    }
+
     #endregion
 }
 

@@ -34,8 +34,10 @@ public class LongSword : Sword, IMeleeWeapon
 
     void Start()
     {
-        prafab = "long-sword";
-        TryGetComponent<Collider>(out m_Collider);
+        if (!TryGetComponent<Collider>(out m_Collider))
+        {
+            m_Collider = GetComponentInChildren<Collider>();
+        }
     }
 
     /// 
@@ -51,11 +53,14 @@ public class LongSword : Sword, IMeleeWeapon
     }
     private void StartAttack()
     {
+        if (m_Collider == null) return;
         m_Collider.enabled = true;
     }
 
     private void EndAttack()
     {
+        if (m_Collider == null) return;
+
         m_Collider.enabled = false;
         hitCharacters = new Dictionary<int, Character>();
     }
@@ -66,7 +71,7 @@ public class LongSword : Sword, IMeleeWeapon
         {
             if (other.TryGetComponent<Character>(out var character) && character.CanDamage(this))
             {
-                Debug.Log($"Attacking {prafab} hit to {other.name} {character.Id}");
+                Debug.Log($"Attacking hit to {other.name} {character.Id}");
 
                 hitCharacters.Add(other.GetInstanceID(), character);
                 character.TakeDamage(Damage);

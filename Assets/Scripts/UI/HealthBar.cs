@@ -32,6 +32,7 @@ public class HealthBar : MonoBehaviour
 
 
     private Character character;
+    private bool m_IsSetup = false;
 
     #region MonoBehaviour Call Backs
     void LateUpdate()
@@ -45,6 +46,7 @@ public class HealthBar : MonoBehaviour
     public void Set(Character character)
     {
         this.character = character;
+        m_IsSetup = true;
         slider.maxValue = character.health.MaxHelath;
         slider.value = character.health.CurrentHealth;
     }
@@ -53,7 +55,12 @@ public class HealthBar : MonoBehaviour
     #region Actions
     public void refreshPosition()
     {
-        if (character == null) return;
+        if (!m_IsSetup) return;
+        if (character == null)
+        {
+            Destroy(gameObject);
+            return;
+        }
         Vector2 pos = Camera.main.WorldToScreenPoint(character.transform.position + m_Offset);
         transform.position = pos;
         Value = character.health.CurrentHealth;

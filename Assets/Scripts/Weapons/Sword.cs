@@ -3,7 +3,6 @@ using Extensions;
 using UnityEngine;
 public class Sword : MonoBehaviour, IDamagabele
 {
-    public string prafab;
 
     [SerializeField]
     public Character m_charcter;

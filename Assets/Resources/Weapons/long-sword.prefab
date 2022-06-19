@@ -97,10 +97,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca4af645fae09734b8496ebfd39b06c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prafab: 
+  prafab: long-sword
   m_charcter: {fileID: 0}
-  m_Damage: 20
+  m_Damage: 50
   attckTime: 1
+  delay: 0.3
 --- !u!136 &2868068123912801114
 CapsuleCollider:
   m_ObjectHideFlags: 0

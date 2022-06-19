@@ -9,7 +9,7 @@ public class Warrior : Character, ICanAttack
 {
     void Start()
     {
-        EquipWeapon("long-sword");
+        EquipWeapon("broad-sword");
     }
 
 
@@ -19,6 +19,7 @@ public class Warrior : Character, ICanAttack
         if (_input.attack)
         {
             _input.attack = false;
+            if (EquiptedWeapon == null) return;
             EquiptedWeapon.Attacking();
             // update animator if using character
             if (_hasAnimator)
@@ -30,16 +31,22 @@ public class Warrior : Character, ICanAttack
 
         }
     }
+    [PunRPC]
     public override void EquipWeapon(string weaponPrefab)
     {
+        _equiptedWeapon = null;
         var prafab = Resources.Load<Sword>($"Weapons/{weaponPrefab}");
+
         GameObjectOperations.Clear(WeaponRoot);
+
         _equiptedWeapon = Instantiate<Sword>(prafab, WeaponRoot, false);
+
         if (_equiptedWeapon != null)
         {
             _equiptedWeapon.transform.localRotation = Quaternion.Euler(Vector3.zero);
+            _equiptedWeapon.Set(this);
         }
-        _equiptedWeapon.Set(this);
+        photonView.RPC("EquipWeapon", RpcTarget.Others, weaponPrefab);
     }
     public override void TakeDamage(int damage)
     {

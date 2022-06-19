@@ -46,11 +46,12 @@ namespace Extensions
 
         public static void Clear(Transform g)
         {
-            foreach (Transform item in g)
+            var childs = g.GetComponentsInChildren<Transform>();
+            foreach (Transform item in childs)
             {
                 if (item != g)
                 {
-                    Destroy(g.gameObject);
+                    Destroy(item.gameObject);
                 }
             }
         }
