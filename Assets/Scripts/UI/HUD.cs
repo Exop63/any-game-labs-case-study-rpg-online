@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class HUD : Singleton<HUD>
 {
+    public RectTransform healthBarRoot;
     public Character Player => m_Character;
 
 
@@ -31,7 +32,7 @@ public class HUD : Singleton<HUD>
         if (!healthBars.ContainsKey(id))
         {
             var preafab = Resources.Load<HealthBar>($"UI/{m_HealthBarPrefabName}");
-            var healthBar = Instantiate<HealthBar>(preafab, transform);
+            var healthBar = Instantiate<HealthBar>(preafab, healthBarRoot);
             healthBar.Set(character);
             healthBars.Add(id, healthBar);
             return healthBar;
