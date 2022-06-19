@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3755073284385805589}
-  - component: {fileID: 3245878232914984616}
+  - component: {fileID: 3468705350168932634}
   m_Layer: 0
   m_Name: broad-sword
   m_TagString: Untagged
@@ -33,7 +33,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3245878232914984616
+--- !u!114 &3468705350168932634
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -42,11 +42,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 7112344543344764807}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ca4af645fae09734b8496ebfd39b06c9, type: 3}
+  m_Script: {fileID: 11500000, guid: b8f8dadbe5e74d944a7e485dd5e7ff91, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_charcter: {fileID: 0}
-  m_Damage: 100
+  m_Damage: 20
   attckTime: 1
   delay: 0.4
 --- !u!1 &8134405641591446600
@@ -59,6 +59,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8134405641591210088}
   - component: {fileID: 8134405641585259592}
+  - component: {fileID: 8683265186156808875}
   m_Layer: 0
   m_Name: Blade Collider
   m_TagString: Untagged
@@ -94,6 +95,33 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.2, y: 0.69036204, z: 0.04}
   m_Center: {x: 0.000000911604, y: -0.30008268, z: -0.00000048317173}
+--- !u!114 &8683265186156808875
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8134405641591446600}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45481869c8d247d4ea8df87d3fb21cef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onTriggerEnter:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 3468705350168932634}
+        m_TargetAssemblyTypeName: BroadSword, Assembly-CSharp
+        m_MethodName: OnHit
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &8134405641591446606
 GameObject:
   m_ObjectHideFlags: 0

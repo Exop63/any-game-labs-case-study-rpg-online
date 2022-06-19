@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Extensions;
 using UnityEngine;
-public class LongSword : Sword, IMeleeWeapon
+public class Scimitar : Sword, IMeleeWeapon
 {
     // Damage value
     [SerializeField] private int m_Damage = 20;

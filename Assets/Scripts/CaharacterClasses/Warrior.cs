@@ -46,7 +46,10 @@ public class Warrior : Character, ICanAttack
             _equiptedWeapon.transform.localRotation = Quaternion.Euler(Vector3.zero);
             _equiptedWeapon.Set(this);
         }
-        photonView.RPC("EquipWeapon", RpcTarget.Others, weaponPrefab);
+        if (isMine)
+        {
+            photonView.RPC("EquipWeapon", RpcTarget.Others, weaponPrefab);
+        }
     }
     public override void TakeDamage(int damage)
     {
