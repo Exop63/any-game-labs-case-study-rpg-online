@@ -126,7 +126,7 @@ public abstract class Character : MonoBehaviour
     {
         if (isMine)
         {
-            m_id = GetInstanceID();
+            m_id = UnityEngine.Random.Range(999, 99999);
             photonView.RPC("SetId", RpcTarget.OthersBuffered, m_id);
         }
     }
