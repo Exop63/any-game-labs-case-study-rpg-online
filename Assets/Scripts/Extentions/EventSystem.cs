@@ -23,7 +23,7 @@ namespace Extensions
 
     }
 
-    public static class GameObjectOperation
+    public class GameObjectOperations : Singleton<GameObjectOperations>
     {
         public static Transform GetChild(Transform g, string name)
         {
@@ -42,19 +42,17 @@ namespace Extensions
                 }
             }
             return null;
-            // var childs = g.GetComponentsInChildren<T>();
-            // if (childs.Length <= 1) return null;
+        }
 
-            // for (int i = 0; i < childs.Length; i++)
-            // {
-            //     var child = childs[i];
-            //     if (child.name == name)
-            //     {
-            //         return child;
-            //     }
-            //     else return GameObjectOperation.GetChild<T>(child, name);
-            // }
-            // return null;
+        public static void Clear(Transform g)
+        {
+            foreach (Transform item in g)
+            {
+                if (item != g)
+                {
+                    Destroy(g.gameObject);
+                }
+            }
         }
     }
 }

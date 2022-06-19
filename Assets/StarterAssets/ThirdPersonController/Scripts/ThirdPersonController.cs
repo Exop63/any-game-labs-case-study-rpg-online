@@ -96,7 +96,7 @@ namespace StarterAssets
         private int _animIDSpeed;
         private int _animIDGrounded;
         private int _animIDJump;
-        private int _animIDAttack;
+        public int _animIDAttack;
         private int _animIDFreeFall;
         private int _animIDMotionSpeed;
 
@@ -112,7 +112,7 @@ namespace StarterAssets
 
         private bool _hasAnimator;
         private bool isAttacking;
-        private bool lockMove;
+        public bool lockMove;
 
         private bool IsCurrentDeviceMouse
         {
@@ -160,7 +160,6 @@ namespace StarterAssets
         {
             _hasAnimator = TryGetComponent(out _animator);
 
-            Attack();
             JumpAndGravity();
             GroundedCheck();
             Move();
@@ -286,22 +285,7 @@ namespace StarterAssets
                 _animator.SetFloat(_animIDMotionSpeed, inputMagnitude);
             }
         }
-        private void Attack()
-        {
-            _input.attack = lockMove ? false : _input.attack;
-            if (_input.attack)
-            {
-                _input.attack = false;
-                // update animator if using character
-                if (_hasAnimator)
-                {
-                    _animator.SetTrigger(_animIDAttack);
-                    var time = _animator.GetCurrentAnimatorClipInfo(0).Length;
-                    LockMove(time);
 
-                }
-            }
-        }
 
 
         private void JumpAndGravity()
@@ -415,14 +399,7 @@ namespace StarterAssets
             }
         }
 
-        public void LockMove(float time)
-        {
-            lockMove = true;
-            EventSystem.Instance.WaitAndDo(_animator.GetCurrentAnimatorClipInfo(0).Length, () =>
-                               {
-                                   lockMove = false;
-                               });
-        }
+
     }
 
 

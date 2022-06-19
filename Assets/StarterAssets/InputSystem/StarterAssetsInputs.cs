@@ -1,4 +1,6 @@
 using UnityEngine;
+using Photon.Pun;
+using Photon.Realtime;
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
 using UnityEngine.InputSystem;
 #endif
@@ -10,6 +12,7 @@ namespace StarterAssets
         [Header("Character Input Values")]
         public Vector2 move;
         public Vector2 look;
+
         public bool jump;
         public bool attack;
 
@@ -21,6 +24,13 @@ namespace StarterAssets
         [Header("Mouse Cursor Settings")]
         public bool cursorLocked = true;
         public bool cursorInputForLook = true;
+
+        private PhotonView photonView;
+
+        void Start()
+        {
+            photonView = GetComponent<PhotonView>();
+        }
 
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
         public void OnMove(InputValue value)
@@ -43,7 +53,14 @@ namespace StarterAssets
 
         public void OnJump(InputValue value)
         {
-            JumpInput(value.isPressed);
+            if (photonView.IsMine)
+            {
+                photonView.RPC("JumpInput", RpcTarget.Others, value.isPressed);
+            }
+            {
+                JumpInput(value.isPressed);
+            }
+
         }
 
         public void OnSprint(InputValue value)
@@ -62,7 +79,7 @@ namespace StarterAssets
         {
             look = newLookDirection;
         }
-
+        [PunRPC]
         public void JumpInput(bool newJumpState)
         {
             jump = newJumpState;
