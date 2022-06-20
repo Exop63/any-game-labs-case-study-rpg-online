@@ -484,7 +484,7 @@ MonoBehaviour:
   sprint: 0
   analogMovement: 0
   cursorLocked: 1
-  cursorInputForLook: 1
+  cursorInputForLook: 0
   rightClick: 0
 --- !u!114 &443539507244708143
 MonoBehaviour:
