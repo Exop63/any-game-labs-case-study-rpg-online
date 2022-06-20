@@ -485,6 +485,7 @@ MonoBehaviour:
   analogMovement: 0
   cursorLocked: 1
   cursorInputForLook: 1
+  rightClick: 0
 --- !u!114 &443539507244708143
 MonoBehaviour:
   m_ObjectHideFlags: 0

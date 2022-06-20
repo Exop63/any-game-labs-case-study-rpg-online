@@ -23,7 +23,8 @@ namespace StarterAssets
 
         [Header("Mouse Cursor Settings")]
         public bool cursorLocked = true;
-        public bool cursorInputForLook = true;
+        public bool cursorInputForLook = false;
+        public bool rightClick = false;
 
         private PhotonView photonView;
 
@@ -44,7 +45,17 @@ namespace StarterAssets
             {
                 LookInput(value.Get<Vector2>());
             }
+            else
+            {
+                LookInput(Vector2.zero);
+            }
         }
+        public void OnStartLook(InputValue value)
+        {
+            Debug.Log("OnStartLook:" + value.isPressed);
+            RightClick(value.isPressed);
+        }
+
         public void OnAttack(InputValue value)
         {
             Debug.Log("Attack");
@@ -89,7 +100,10 @@ namespace StarterAssets
             attack = newAttackState;
         }
 
-
+        public void RightClick(bool newRightClick)
+        {
+            cursorInputForLook = newRightClick;
+        }
         public void SprintInput(bool newSprintState)
         {
             sprint = newSprintState;
